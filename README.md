@@ -74,26 +74,35 @@ The cleaned dataset is now consistent, complete, and ready for further explorato
 CODE⚙️
 import pandas as pd
 
-# Load
+#Load
+
 df = pd.read_csv("/content/sales_data.csv")
-#  Handle missing values
+
+#Handle missing values
+
 for col in df.columns:
-    if df[col].dtype == 'O':  # Object (text) columns
+
+    if df[col].dtype == 'O':  #Object (text) columns
         df[col] = df[col].fillna(df[col].mode()[0])
-    else:  # Numeric columns
+    else:  #Numeric columns
         df[col] = df[col].fillna(df[col].median())
 
-#  Remove duplicates
+#Remove duplicates
+
 df = df.drop_duplicates()
 
-# Standardize text values
+#Standardize text values
+
 for col in df.select_dtypes(include='object').columns:
+
     df[col] = df[col].astype(str).str.strip().str.lower().str.capitalize()
 
-#  Convert date columns
+#Convert date columns
+
 df['Sale_Date'] = pd.to_datetime(df['Sale_Date'], dayfirst=True, errors='coerce')
 
-#  Clean column names
+#Clean column names
+
 df.columns = (
     df.columns.str.strip()
     .str.lower()
@@ -101,14 +110,17 @@ df.columns = (
     .str.replace('[^a-z0-9_]', '', regex=True)
 )
 
-#  Fix data types if needed (example: ensure quantity_sold is int)
+#Fix data types if needed (example: ensure quantity_sold is int)
+
 df['quantity_sold'] = df['quantity_sold'].astype(int)
 
-# cleaned data
+#cleaned data
+
 df.head()
 
 
-#output 
+# output 
+
 product_id	sale_date	sales_rep	region	sales_amount	quantity_sold	product_category	unit_cost	unit_price	customer_type	discount	payment_method	sales_channel	region_and_sales_rep
 0	1052	2023-03-02	Bob	North	5053.97	18	Furniture	152.75	267.22	Returning	0.09	Cash	Online	North-bob
 1	1093	NaT	Bob	West	4384.02	17	Furniture	3816.39	4209.44	Returning	0.11	Cash	Retail	West-bob
